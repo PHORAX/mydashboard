@@ -141,8 +141,3 @@ class tx_mydashboard_userstats extends tx_mydashboard_template implements tx_myd
 
 
 } # class - tx_mydashboard_userstats
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/widgets/class.tx_mydashboard_userstats.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/widgets/class.tx_mydashboard_userstats.php']);
-} # if
-?>

@@ -77,7 +77,3 @@ class tx_mydashboard_additionalToolbarIcons implements backend_toolbarItem {
 $TYPO3backend->addCss('#mydashboard-links-menu { width:30px; }');
 $TYPO3backend->addToolbarItem('tx_mydashboard_additionalToolbarIcons', 'tx_mydashboard_additionalToolbarIcons');
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/class.tx_mydashboard_additionalToolbarIcons.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/class.tx_mydashboard_additionalToolbarIcons.php']);
-} # if
-?>

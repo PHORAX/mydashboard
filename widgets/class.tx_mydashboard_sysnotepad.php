@@ -61,8 +61,3 @@ class tx_mydashboard_sysnotepad extends tx_mydashboard_template implements tx_my
 	} # function - getContent
 
 } # class - tx_mydashboard_sysnotepad
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/widgets/class.tx_mydashboard_sysnotepad.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/widgets/class.tx_mydashboard_sysnotepad.php']);
-} # if
-?>

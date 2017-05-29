@@ -413,8 +413,3 @@ class tx_mydashboard_template {
 
 
 } # class - tx_mydashboard_template
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/templates/class.tx_mydashboard_template.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/templates/class.tx_mydashboard_template.php']);
-} # if
-?>
