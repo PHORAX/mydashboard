@@ -25,18 +25,19 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-class tx_mydashboard_serverinfo extends tx_mydashboard_template implements tx_mydashboard_widgetinterface {
+class tx_mydashboard_serverinfo extends tx_mydashboard_template implements tx_mydashboard_widgetinterface
+{
+    public function getContent()
+    {
+        return '<font color="red">No Content yet</font>';
+    }
 
-	function getContent(){
-		return '<font color="red">No Content yet</font>';
-	}
+    public function init()
+    {
+        $ico = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard') . 'widgets/icon/tx_mydashboard_serverinfo.png';
+        $this->setIcon($ico);
+        $this->setTitle('Server Info');
 
-	function init(){
-		$ico = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard').'widgets/icon/tx_mydashboard_serverinfo.png';
-		$this->setIcon($ico);
-		$this->setTitle('Server Info');
-		
-		return true;
-	
-	}
-} # class - tx_mydashboard_serverinfo
+        return true;
+    }
+}

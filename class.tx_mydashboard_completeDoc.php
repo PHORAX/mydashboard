@@ -25,13 +25,11 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-class tx_mydashboard_completeDoc extends template {
+class tx_mydashboard_completeDoc extends template
+{
 
-	
-	/*
-	 * Overwrite the default div class
-	 */
-	var $divClass = 'typo3-completeDoc';
-	
-	
-} # class - tx_mydashboard_completeDoc
+    /*
+     * Overwrite the default div class
+     */
+    public $divClass = 'typo3-completeDoc';
+}

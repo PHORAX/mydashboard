@@ -25,22 +25,21 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-interface tx_mydashboard_widgetinterface  {
+interface tx_mydashboard_widgetinterface
+{
 
-	/*
-	 * This function return the Content of the Widget
-	 *
-	 * @return String
-	 */
-	public function getContent();
-	
-	
-	/*
-	 * This function init the Widget and have to return a boolean
-	 * true = All Right; false = The Widget isn´t Display in the Dashboard
-	 *
-	 * @return boolean
-	 */
-	public function init();
+    /*
+     * This function return the Content of the Widget
+     *
+     * @return String
+     */
+    public function getContent();
 
-} # interface - tx_mydashboard_widgetinterface
+    /*
+     * This function init the Widget and have to return a boolean
+     * true = All Right; false = The Widget isn´t Display in the Dashboard
+     *
+     * @return boolean
+     */
+    public function init();
+}

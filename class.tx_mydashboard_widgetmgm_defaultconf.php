@@ -25,53 +25,53 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-class tx_mydashboard_widgetmgm_defaultconf {
+class tx_mydashboard_widgetmgm_defaultconf
+{
 
-	
-	/*
-	 * Return the default conf for this extension
-	 */
-	public function getConf(){
-		return array(
-			'config' => array(
-				'layout' => 'tx_mydashboard_completeDoc',
-				'theme' => 'default',
-				'rows' => 3,
-			),
-			'items' => array(
-				'userstatsstartme1' => array(
-					'widgetkey' => 'userstats',
-					'config' => array(
-						'item_output' => 10,
-					),
-				),
-				'rssfeedstartme2' => array(
-					'widgetkey' => 'rssfeed',
-					'config' => array(
-						'item_limit' => 8,
-						'feed_title' => 'typo3blogger.de',
-						'feed_url' => 'http://typo3blogger.de/feed/',
-					),
-				),
-				'rssfeedstartme3' => array(
-					'widgetkey' => 'rssfeed',
-					'config' => array(
-						'item_limit' => 8,
-						'feed_title' => 'typo3.org',
-						'feed_url' => 'http://news.typo3.org/rss.xml',
-					),
-				),
-			),
-			'position' => array(
-				0 => array(
-					'rssfeedstartme2',
-					'rssfeedstartme3',
-				),
-				1 => array(
-					'userstatsstartme1',
-				),
-			),
-		);
-	} # function - getConf	
-	
-} # class - tx_mydashboard_widgetmgm_defaultconf
+    /*
+     * Return the default conf for this extension
+     */
+    public function getConf()
+    {
+        return [
+            'config' => [
+                'layout' => 'tx_mydashboard_completeDoc',
+                'theme' => 'default',
+                'rows' => 3,
+            ],
+            'items' => [
+                'userstatsstartme1' => [
+                    'widgetkey' => 'userstats',
+                    'config' => [
+                        'item_output' => 10,
+                    ],
+                ],
+                'rssfeedstartme2' => [
+                    'widgetkey' => 'rssfeed',
+                    'config' => [
+                        'item_limit' => 8,
+                        'feed_title' => 'typo3blogger.de',
+                        'feed_url' => 'http://typo3blogger.de/feed/',
+                    ],
+                ],
+                'rssfeedstartme3' => [
+                    'widgetkey' => 'rssfeed',
+                    'config' => [
+                        'item_limit' => 8,
+                        'feed_title' => 'typo3.org',
+                        'feed_url' => 'http://news.typo3.org/rss.xml',
+                    ],
+                ],
+            ],
+            'position' => [
+                0 => [
+                    'rssfeedstartme2',
+                    'rssfeedstartme3',
+                ],
+                1 => [
+                    'userstatsstartme1',
+                ],
+            ],
+        ];
+    }
+}

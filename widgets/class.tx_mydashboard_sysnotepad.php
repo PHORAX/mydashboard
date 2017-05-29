@@ -25,36 +25,40 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-class tx_mydashboard_sysnotepad extends tx_mydashboard_template implements tx_mydashboard_widgetinterface {
+class tx_mydashboard_sysnotepad extends tx_mydashboard_template implements tx_mydashboard_widgetinterface
+{
 
-	/*
-	 * initial  the Widget
-	 */
-	function init(){
-	
-		// Check if sys_notepad is active
-		if(!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('sys_notepad')) return false;
-		
-		// Init Parent
-		parent::init();
-		
-		// Set title & icon
-		$this->setTitle($this->getInternalLabel('notepad'));
-		$this->setIcon(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('sys_notepad').'/ext_icon.gif');
-		
-		return true;
-	} # function - init
-	
-	/*
-	 * Get the Widget Content
-	 */
-	function getContent(){
+    /*
+     * initial  the Widget
+     */
+    public function init()
+    {
 
-		// Build up the Notepadoutput
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('note','sys_notepad','sys_notepad.cruser_id='.intval($GLOBALS['BE_USER']->user['uid']));
-		$c .= $this->showDatabaseList($this->getInternalLabel('notes').':',$res,'note');
-		
-		return $c;	
-	} # function - getContent
+        // Check if sys_notepad is active
+        if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('sys_notepad')) {
+            return false;
+        }
 
-} # class - tx_mydashboard_sysnotepad
+        // Init Parent
+        parent::init();
+
+        // Set title & icon
+        $this->setTitle($this->getInternalLabel('notepad'));
+        $this->setIcon(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('sys_notepad') . '/ext_icon.gif');
+
+        return true;
+    }
+
+    /*
+     * Get the Widget Content
+     */
+    public function getContent()
+    {
+
+        // Build up the Notepadoutput
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('note', 'sys_notepad', 'sys_notepad.cruser_id=' . intval($GLOBALS['BE_USER']->user['uid']));
+        $c .= $this->showDatabaseList($this->getInternalLabel('notes') . ':', $res, 'note');
+
+        return $c;
+    }
+}
