@@ -44,4 +44,3 @@ interface tx_mydashboard_widgetinterface  {
 	public function init();
 
 } # interface - tx_mydashboard_widgetinterface
-?>

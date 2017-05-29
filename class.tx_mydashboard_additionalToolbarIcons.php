@@ -24,56 +24,55 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
-if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
-	require_once(PATH_site.'typo3/interfaces/interface.backend_toolbaritem.php');
-}
-
-class tx_mydashboard_additionalToolbarIcons implements backend_toolbarItem {
-
-	/**
-	 * constructor that receives a back reference to the backend
-	 *
-	 * @param       TYPO3backend    TYPO3 backend object reference
-	 */
-	public function __construct(TYPO3backend &$backendReference = null) {
-		$this->backennd = $backendReference;
-		$this->_REL_PATH = t3lib_extMgm::extRelPath('mydashboard');
-	}
-	
-	/**
-	 * checks whether the user has access to this toolbar item
-	 *
-	 * @return  boolean  true if user has access, false if not
-	 */
-	public function checkAccess() {
-		return true;
-	}
-	
-	/**
-	 * renders the toolbar item
-	 *
- 	 * @return      string  the toolbar item rendered as HTML string
-	 */
-	public function render() {
-		
-		$output = '<a href="#" onclick="top.goToModule(\'user_txmydashboardM1\');this.blur();return false;" class="toolbar-item"><img src="'.$this->_REL_PATH.'mod1/home.png" width="16" height="16" title="myDashboard" alt="" /></a>';
-		
-		return $output;
-	}
-
-	/**
-	 * returns additional attributes for the list item in the toolbar
-	 *
-	 * @return      string          list item HTML attibutes
-	 */
-	public function getAdditionalAttributes() {
-		return ' id="mydashboard-links-menu"';
-	}
-	
-} # class - tx_mydashboard_additionalToolbarIcons
-
-# add the Item
-$TYPO3backend->addCss('#mydashboard-links-menu { width:30px; }');
-$TYPO3backend->addToolbarItem('tx_mydashboard_additionalToolbarIcons', 'tx_mydashboard_additionalToolbarIcons');
-
+//
+//if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
+//	require_once(PATH_site.'typo3/interfaces/interface.backend_toolbaritem.php');
+//}
+//
+//class tx_mydashboard_additionalToolbarIcons implements backend_toolbarItem {
+//
+//	/**
+//	 * constructor that receives a back reference to the backend
+//	 *
+//	 * @param       TYPO3backend    TYPO3 backend object reference
+//	 */
+//	public function __construct(TYPO3backend &$backendReference = null) {
+//		$this->backennd = $backendReference;
+//		$this->_REL_PATH = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard');
+//	}
+//
+//	/**
+//	 * checks whether the user has access to this toolbar item
+//	 *
+//	 * @return  boolean  true if user has access, false if not
+//	 */
+//	public function checkAccess() {
+//		return true;
+//	}
+//
+//	/**
+//	 * renders the toolbar item
+//	 *
+// 	 * @return      string  the toolbar item rendered as HTML string
+//	 */
+//	public function render() {
+//
+//		$output = '<a href="#" onclick="top.goToModule(\'user_txmydashboardM1\');this.blur();return false;" class="toolbar-item"><img src="'.$this->_REL_PATH.'mod1/home.png" width="16" height="16" title="myDashboard" alt="" /></a>';
+//
+//		return $output;
+//	}
+//
+//	/**
+//	 * returns additional attributes for the list item in the toolbar
+//	 *
+//	 * @return      string          list item HTML attibutes
+//	 */
+//	public function getAdditionalAttributes() {
+//		return ' id="mydashboard-links-menu"';
+//	}
+//
+//} # class - tx_mydashboard_additionalToolbarIcons
+//
+//# add the Item
+//$TYPO3backend->addCss('#mydashboard-links-menu { width:30px; }');
+//$TYPO3backend->addToolbarItem('tx_mydashboard_additionalToolbarIcons', 'tx_mydashboard_additionalToolbarIcons');

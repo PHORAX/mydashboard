@@ -3,7 +3,7 @@ if(!defined('TYPO3_MODE'))
 	die('Access denied.');
 	
 if(TYPO3_MODE == 'BE'){
-	t3lib_extMgm::addModule('user','txmydashboardM1','',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('user','txmydashboardM1','',\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'mod1/');
 } # if
 
 
@@ -21,7 +21,5 @@ $tempColumns = Array (
 );
 
 
-t3lib_div::loadTCA('be_users');
-t3lib_extMgm::addTCAcolumns('be_users',$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes('be_users','tx_mydashboard_order;;;;1-1-1, tx_mydashboard_selfadmin');
-?>
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('be_users',$tempColumns,1);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('be_users','tx_mydashboard_order;;;;1-1-1, tx_mydashboard_selfadmin');

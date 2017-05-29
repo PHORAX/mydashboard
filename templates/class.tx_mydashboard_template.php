@@ -384,7 +384,7 @@ class tx_mydashboard_template {
 	
 	
 	/*
-	 * Set the Icon of the Widget e.g. $this->setIcon(t3lib_extMgm::extRelPath('tt_news').'/ext_icon.gif');
+	 * Set the Icon of the Widget e.g. $this->setIcon(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('tt_news').'/ext_icon.gif');
 	 *
 	 * @parm String $iconPath the relative Path to the IconFile
 	 */
@@ -407,7 +407,7 @@ class tx_mydashboard_template {
 	 * Get the Icon path
 	 */
 	public function getIcon(){
-		if(!$this->icon) $this->setIcon(t3lib_extMgm::extRelPath('mydashboard').'templates/tx_mydashboard_widget_default.png');
+		if(!$this->icon) $this->setIcon(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard').'templates/tx_mydashboard_widget_default.png');
 		return $this->icon;
 	} # function - getIcon
 

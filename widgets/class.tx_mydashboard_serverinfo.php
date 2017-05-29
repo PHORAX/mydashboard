@@ -25,9 +25,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('mydashboard', 'templates/class.tx_mydashboard_template.php'));
-require_once(t3lib_extMgm::extPath('mydashboard', 'templates/interface.tx_mydashboard_widgetinterface.php'));
-
 class tx_mydashboard_serverinfo extends tx_mydashboard_template implements tx_mydashboard_widgetinterface {
 
 	function getContent(){
@@ -35,7 +32,7 @@ class tx_mydashboard_serverinfo extends tx_mydashboard_template implements tx_my
 	}
 
 	function init(){
-		$ico = t3lib_extMgm::extRelPath('mydashboard').'widgets/icon/tx_mydashboard_serverinfo.png';
+		$ico = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard').'widgets/icon/tx_mydashboard_serverinfo.png';
 		$this->setIcon($ico);
 		$this->setTitle('Server Info');
 		

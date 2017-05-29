@@ -25,9 +25,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('mydashboard', 'templates/class.tx_mydashboard_template.php'));
-require_once(t3lib_extMgm::extPath('mydashboard', 'templates/interface.tx_mydashboard_widgetinterface.php'));
-
 class tx_mydashboard_rssfeed extends tx_mydashboard_template implements tx_mydashboard_widgetinterface {
 
 
@@ -60,13 +57,13 @@ class tx_mydashboard_rssfeed extends tx_mydashboard_template implements tx_mydas
 		);
 		
 		// Add Language File
-		$this->addLanguageFile(t3lib_div::getFileAbsFileName('EXT:mydashboard/widgets/labels.xml'));
+		$this->addLanguageFile(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:mydashboard/widgets/labels.xml'));
 		
 		// Set the Default config
 		$this->setDefaultConfig($config);
 		
 		// Set title & icon
-		$this->setIcon(t3lib_extMgm::extRelPath('mydashboard').'widgets/icon/tx_mydashboard_rssfeed.png');
+		$this->setIcon(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard').'widgets/icon/tx_mydashboard_rssfeed.png');
 		$this->setTitle('RSS: '.$this->getConfigVar('feed_title'));
 		
 		// required
@@ -97,7 +94,7 @@ class tx_mydashboard_rssfeed extends tx_mydashboard_template implements tx_mydas
 		} # if
 		
 		// Load the rss2array class and fetch the RSS Feed
-		require_once(t3lib_extMgm::extPath('mydashboard', 'widgets/helper/rss2array.php'));
+        include_once(__DIR__ . '/helper/rss2array.php');
 		$rss_array = rss2array($url);
 		
 		// Safe the Feed in a Cache File
@@ -166,7 +163,7 @@ class tx_mydashboard_rssfeed extends tx_mydashboard_template implements tx_mydas
 	private function safeRSSData($fileName, $rssArray){
 		if(file_exists($fileName))
 			unlink($fileName);
-		t3lib_div::writeFileToTypo3tempDir($fileName,serialize($rssArray));
+		\TYPO3\CMS\Core\Utility\GeneralUtility::writeFileToTypo3tempDir($fileName,serialize($rssArray));
 	} # function - safeRSSData
 
 

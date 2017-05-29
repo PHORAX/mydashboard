@@ -25,17 +25,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-unset($MCONF);
-require_once('conf.php');
-require_once($BACK_PATH.'init.php');
-if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000) {
-	require_once($BACK_PATH.'template.php');
-	require_once(PATH_t3lib.'class.t3lib_scbase.php');
-}
-$LANG->includeLLFile('EXT:mydashboard/mod1/locallang.xml');
-
-$BE_USER->modAccess($MCONF,1);
-
+$GLOBALS['BE_USER']->modAccess($MCONF, 1);
 
 /**
  * Module 'Dashboard' for the 'mydashboard' extension.
@@ -44,7 +34,7 @@ $BE_USER->modAccess($MCONF,1);
  * @package	TYPO3
  * @subpackage	tx_mydashboard
  */
-class tx_mydashboard_module1 extends t3lib_SCbase {
+class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 
 
@@ -61,14 +51,22 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	Widgets weitergeben: tt_news an Rupi (ext_localconf.php und Files dannach aufräumen)
 	*/
 
-
-
-
 	/* Page Info */
 	var $pageinfo;
-	
-	private $jsLoaded = array();
-	
+
+    /**
+     * @var \tx_mydashboard_widgetmgm
+     */
+    protected $mgm;
+
+    private $jsLoaded = array();
+
+
+    public function __construct()
+    {
+        $GLOBALS['LANG']->includeLLFile('EXT:mydashboard/mod1/locallang.xml');
+    }
+
 	/*
 	 * Initializes the Module
 	 *
@@ -77,11 +75,9 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	function init()	{
 		
 		parent::init();
-		
 		// header("Content-Type: text/html; charset=utf-8");
 		
-		require_once(dirname(dirname(__FILE__)).'/class.tx_mydashboard_widgetmgm.php');
-		$this->mgm = t3lib_div::makeInstance('tx_mydashboard_widgetmgm');
+		$this->mgm = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\tx_mydashboard_widgetmgm::class);
 	} # function - init
 	
 	
@@ -91,11 +87,10 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function menuConfig() {
-		global $LANG;
 		$this->MOD_MENU = Array (
 			'function' => Array (
-				'1' => $LANG->getLL('title'),
-				'2' => $LANG->getLL('config')
+				'1' => $GLOBALS['LANG']->getLL('title'),
+				'2' => $GLOBALS['LANG']->getLL('config')
 			)
 		);
 		parent::menuConfig();
@@ -110,18 +105,18 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	function main()	{
 	
 		/*
-		Access Check via $BE_USER->modAccess($MCONF,1); in the top of this file.
+		Access Check via $GLOBALS['BE_USER']->modAccess($MCONF,1); in the top of this file.
 		*/
 		
 	
-		#global $BE_USER;
+		#global $GLOBALS['BE_USER'];
 		#
 		#// Access check!
 		#$this->id = 1;
 		#$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 		#$access = is_array($this->pageinfo) ? 1 : 0;
 		#
-		#if (($this->id && $access) || $BE_USER->user['admin'])	{
+		#if (($this->id && $access) || $GLOBALS['BE_USER']->user['admin'])	{
 			if(isset($_REQUEST['ajax']))
 				$this->renderAJAX();
 			else
@@ -149,6 +144,7 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleContent() {
+        $content = '';
 		switch((string)$this->MOD_SETTINGS['function'])	{
 			case 1:
 				$content .= $this->doc->section('',$this->showDashboard(),0,1);
@@ -168,22 +164,21 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	 * @return boolean
 	 */
 	function currentUserHaveConfigAccess(){
-		global $BE_USER;
-		if(!is_array($BE_USER->user)) return false;
-		if($BE_USER->user['admin']) return true;
-		if($BE_USER->user['tx_mydashboard_selfadmin']) return true;
+		if(!is_array($GLOBALS['BE_USER']->user)) return false;
+		if($GLOBALS['BE_USER']->user['admin']) return true;
+		if($GLOBALS['BE_USER']->user['tx_mydashboard_selfadmin']) return true;
 		return false;
 	} # function - currentUserHaveConfigAccess
 	
 	
-	/*
+	/**
 	 * Render the AJAX Content for widgets
-	 */
-	function renderAJAX(){
-		global $BE_USER;
-		$user = $BE_USER->user['uid'];
+     * @return bool
+     */
+    function renderAJAX(){
+		$user = $GLOBALS['BE_USER']->user['uid'];
 		$this->mgm->loadUserConf($user);
-		
+        $_REQUEST['key'] = trim($_REQUEST['key'], '#');
 		switch($_REQUEST['action']){
 			case 'refresh':
 				$widget = $this->mgm->getWidget($_REQUEST['key']);
@@ -231,6 +226,7 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 				$this->content = 'No Action';
 				break;
 		} # switch
+        return true;
 	} # function - renderAJAX
 	
 	
@@ -238,10 +234,8 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	 * Show the Dashboard
 	 */
 	function showDashboard(){
-		global $BE_USER;
-	
 		// Config an preload
-		$this->mgm->loadUserConf($BE_USER->user['uid']);
+		$this->mgm->loadUserConf($GLOBALS['BE_USER']->user['uid']);
 		$userConf = $this->mgm->getUserConf();
 		$content = array('','','','');
 		$rows = intval($userConf['config']['rows']);
@@ -296,7 +290,7 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 		for($i = 0; $i < intval($userConf['config']['rows']); $i++){
 			if(!is_array($userConf['position'][$i])) continue;
 			
-			$js .= 'Sortable.create("container'.$i.'",{tag: \'div\',dropOnEmpty:true,containment:[###CONTAINER###],constraint:false, onUpdate:sendNewOrder});'."\n";
+//			$js .= 'Sortable.create("container'.$i.'",{tag: \'div\',dropOnEmpty:true,containment:[###CONTAINER###],constraint:false, onUpdate:sendNewOrder});'."\n";
 			$container[] = '"container'.$i.'"';
 			$newOrder[] = 'parms = Sortable.serialize("container'.$i.'", {name: \''.$i.'\'})+"&"+parms;';
 		}
@@ -321,37 +315,39 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	 * Render the Main Content
 	 */
 	function renderContent(){
-		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
-		
-		require_once(t3lib_extMgm::extPath('mydashboard').'class.tx_mydashboard_completeDoc.php');
-		
+
+//		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('mydashboard').'class.tx_mydashboard_completeDoc.php');
+
 		// The different Content Types order by size
-		$this->contentSize = array(
-			'mediumDoc',
-			'bigDoc',
-			'tx_mydashboard_completeDoc',
-		);
+//		$this->contentSize = array(
+//			'mediumDoc',
+//			'bigDoc',
+//			'tx_mydashboard_completeDoc',
+//		);
 		
-		$user = $BE_USER->user['uid'];
+		$user = $GLOBALS['BE_USER']->user['uid'];
 		$this->mgm->loadUserConf($user);
-		$config = $this->mgm->getUserConf('config');
+//		$config = $this->mgm->getUserConf('config');
 		
 		// ############# Set the right Content type here
 		
-		$this->currentContentSize = (isset($config['layout']) && in_array($config['layout'], $this->contentSize))?$config['layout']:$this->contentSize[1];
+//		$this->currentContentSize = (isset($config['layout']) && in_array($config['layout'], $this->contentSize))?$config['layout']:$this->contentSize[1];
 		
-		$this->doc = t3lib_div::makeInstance($this->currentContentSize);
-		$this->doc->backPath = $BACK_PATH;
+		$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Template\DocumentTemplate::class);
+		$this->doc->backPath = $GLOBALS['BACK_PATH'];
 		$this->doc->docType = 'xhtml_trans';
 		$this->doc->form = '';
 		
 		// ############# Set the right Theme here
-		$this->doc->styleSheetFile2 = t3lib_extMgm::extRelPath('mydashboard').'mod1/css/theme-default.css';
+		$this->doc->styleSheetFile2 = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard').'mod1/css/theme-default.css';
 		
 		// required for the widgets
-		$this->doc->loadJavascriptLib('contrib/prototype/prototype.js');
-		$this->doc->getPageRenderer()->loadScriptaculous('effects,dragdrop');
-		$this->doc->loadJavascriptLib(t3lib_extMgm::extRelPath('mydashboard').'mod1/functions.js');
+
+//		$this->doc->loadJavascriptLib('contrib/prototype/prototype.js');
+//		$this->doc->getPageRenderer()->loadScriptaculous('effects,dragdrop');
+        $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
+        $pageRenderer->loadJquery();
+		$this->doc->loadJavascriptLib(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard').'mod1/functions.js');
 		
 		
 		// JavaScript
@@ -371,16 +367,16 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 		';
 		
 		$headerSection = 'Hallo <strong>';
-		$headerSection .= (trim($BE_USER->user['realName']))?htmlspecialchars($BE_USER->user['realName']):'<i>No User Name</i>';
-		$headerSection .= ' ('.$BE_USER->user['username'].')</strong> - <i>'.date('F j, Y, g:i a', time()).'</i>';
-		$menu = ($this->currentUserHaveConfigAccess())?t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'],'index.php'):'';
+		$headerSection .= (trim($GLOBALS['BE_USER']->user['realName']))?htmlspecialchars($GLOBALS['BE_USER']->user['realName']):'<i>No User Name</i>';
+		$headerSection .= ' ('.$GLOBALS['BE_USER']->user['username'].')</strong> - <i>'.date('F j, Y, g:i a', time()).'</i>';
+		$menu = ($this->currentUserHaveConfigAccess())?\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'],'index.php'):'';
 		
 		$moduleContent = $this->moduleContent();
 		
 		
 		$GLOBALS['LANG']->charSet = 'utf-8';		
-		$this->content.=$this->doc->startPage($LANG->getLL('title'));
-		$this->content.=$this->doc->header($LANG->getLL('title'));
+		$this->content.=$this->doc->startPage($GLOBALS['LANG']->getLL('title'));
+		$this->content.=$this->doc->header($GLOBALS['LANG']->getLL('title'));
 		$this->content.=$this->doc->spacer(5);
 		$this->content.=$this->doc->section('',$this->doc->funcMenu($headerSection,$menu));
 		$this->content.=$this->doc->divider(5);
@@ -389,7 +385,7 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 		$this->content .= $moduleContent;
 		
 		// ShortCut
-		if($BE_USER->mayMakeShortcut()) 
+		if($GLOBALS['BE_USER']->mayMakeShortcut()) 
 			$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
 
 		$this->content.=$this->doc->spacer(10);
@@ -401,11 +397,10 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	 * Build up a select form item
 	 */
 	function buildSelect($name, $data, $current = false){
-		global $LANG;
-		
+
 		$out = '<select name="'.$name.'">';
 		foreach($data as $value)
-			$out .= '<option value="'.$value.'"'.(($current && $current == $value)?' selected="selected"':'').'>'.$LANG->getLL($name.'_'.$value).'</option>';
+			$out .= '<option value="'.$value.'"'.(($current && $current == $value)?' selected="selected"':'').'>'.$GLOBALS['LANG']->getLL($name.'_'.$value).'</option>';
 		return $out.'</select>';
 	} # function - buildSelect
 	
@@ -416,11 +411,11 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	function showConfig(){
 	
 		// Init Config Page & load the User data
-		global $LANG,$BE_USER;
-		$user = $BE_USER->user['uid'];
+		$user = $GLOBALS['BE_USER']->user['uid'];
 		$this->mgm->loadUserConf($user);
 		$config = $this->mgm->getUserConf('config');
-		
+
+        $content = '';
 		
 		// Add Widget
 		if(isset($_REQUEST['addWidget'])){
@@ -440,7 +435,7 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 				$uc = unserialize($row['uc']);
 				if(is_array($uc)){
 					$uc['startModule'] = 'user_txmydashboardM1';
-					$BE_USER->uc['startModule'] = 'user_txmydashboardM1';
+					$GLOBALS['BE_USER']->uc['startModule'] = 'user_txmydashboardM1';
 					$GLOBALS['TYPO3_DB']->exec_UPDATEquery('be_users', 'uid='.intval($user), array('uc' => serialize($uc)));
 					$content .= '<span class="notice">Notice:</span> The Dashboard is set as startpage (current user)!<hr />';
 				} # if
@@ -461,22 +456,25 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 		} # if
 		
 		// Check if the Dashboard is the home page
-		if(trim($BE_USER->uc['startModule']) != 'user_txmydashboardM1')
-			$content .= '<span class="notice">Notice:</span> The Dashboard is not the startpage (current user)! Click <a style="text-decoration: underline;" href="index.php?&id=0&SET[function]=2&dashHome=1">here</a> to set the Dashboard as startpage.<hr />';
-		
+		if(trim($GLOBALS['BE_USER']->uc['startModule']) != 'user_txmydashboardM1') {
+            $href = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M'),
+                        []) . '&SET[function]=2&dashHome=1';
+            $content .= '<span class="notice">Notice:</span> The Dashboard is not the startpage (current user)! Click <a style="text-decoration: underline;" href="' . $href . '">here</a> to set the Dashboard as startpage.<hr />';
+        }
 	
 		
 		
-		$content .= '<h1>'.$LANG->getLL('config').'</h1>';
-		
+		$content .= '<h1>'.$GLOBALS['LANG']->getLL('config').'</h1>';
+
+        $href = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M'), []);
 		$content .= '
-		<form action="index.php" method="post">
+		<form action="' . $href . '" method="post">
 		<input type="hidden" name="configForm" value="1" />
 		<table>
-			<tr>
+			<!--tr>
 				<td>Dashboard Layout:</td>
 				<td>'.$this->buildSelect('config_layout', $this->contentSize, $config['layout']).'</td>
-			</tr>
+			</tr-->
 			<tr>
 				<td>Widget Cols:</td>
 				<td>'.$this->buildSelect('config_rows', array('2','3','4'), $config['rows']).'</td>
@@ -497,8 +495,17 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 		$content .= '<h3>Add Widgets (always to the left row)</h3>';
 		$widgets = $this->mgm->getAllWidgets();
 		$content .= '<table>';
-		foreach($widgets as $key => $widget)
-			$content .= '<tr><td>'.$this->mgm->renderIcon($widget).'</td><td>'.$widget->getTitle().'</td><td><a style="text-decoration: underline;" href="index.php?&id=0&SET[function]=2&addWidget='.$widget->getWidgetKey().'">add Widget</a></td></tr>';
+        /**
+         * @var string $key
+         * @var \tx_mydashboard_template $widget
+         */
+        foreach($widgets as $key => $widget) {
+            $href = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M'), []) . '&SET[function]=2&addWidget=' . $widget->getWidgetKey();
+            $content .= '<tr><td>' .
+                    $this->mgm->renderIcon($widget) .
+                    '</td><td>'.$widget->getTitle() .
+                    '</td><td><a style="text-decoration: underline;" href="' . $href . '">add Widget</a></td></tr>';
+        }
 		$content .= '</table>';
 		
 		return $content;
@@ -507,15 +514,8 @@ class tx_mydashboard_module1 extends t3lib_SCbase {
 	
 } # class - tx_mydashboard_module1
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/mod1/index.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/mydashboard/mod1/index.php']);
-} # if
-
-
 # Get the Page
-$SOBE = t3lib_div::makeInstance('tx_mydashboard_module1');
+$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\tx_mydashboard_module1::class);
 $SOBE->init();
-foreach($SOBE->include_once as $INC_FILE)	include_once($INC_FILE);
 $SOBE->main();
 $SOBE->printContent();
-?>
