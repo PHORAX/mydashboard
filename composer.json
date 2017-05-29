@@ -1,0 +1,19 @@
+{
+  "name": "phorax/mydashboard",
+  "description": "mydashboard",
+  "type": "typo3-cms-extension",
+  "license": "proprietary",
+  "require": {
+    "typo3/cms-core": ">=7.6.0,<8.7.99"
+  },
+  "version": "1.1.0",
+  "autoload": {
+    "classmap": [
+      "class.tx_mydashboard_completeDoc.php",
+      "class.tx_mydashboard_widgetmgm.php",
+      "class.tx_mydashboard_widgetmgm_defaultconf.php",
+      "widgets/",
+      "templates/"
+    ]
+  }
+}
