@@ -7,7 +7,6 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="be_users.tx_mydashboard_config">Dashboard Config</label>
-			<label index="be_users.tx_mydashboard_selfadmin">Self Admin</label>
 		</languageKey>
 	</data>
 </T3locallang>
