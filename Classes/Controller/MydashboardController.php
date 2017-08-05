@@ -1,4 +1,6 @@
 <?php
+namespace PHORAX\Mydashboard\Controller;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -25,12 +27,23 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-$GLOBALS['BE_USER']->modAccess($MCONF, 1);
+#$GLOBALS['BE_USER']->modAccess($MCONF, 1);
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Fluid\ViewHelpers\Be\InfoboxViewHelper;
+
 
 /**
  * Module 'Dashboard' for the 'mydashboard' extension.
  */
-class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
+class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
 {
 
     /* Page Info */
@@ -42,6 +55,11 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
     protected $mgm;
 
     private $jsLoaded = [];
+
+    /**
+     * @var string
+     */
+    protected $moduleName = 'user_txmydashboardM1';
 
     public function __construct()
     {
@@ -103,14 +121,30 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
         //} # if
     }
 
-    /*
-     * Prints out the module HTML
+    /**
+     * Injects the request object for the current request or subrequest
+     * Then checks for module functions that have hooked in, and renders menu etc.
      *
-     * @return	void
+     * @param ServerRequestInterface $request the current request
+     * @param ResponseInterface $response
+     * @return ResponseInterface the response with the content
      */
-    public function printContent()
+    public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
     {
-        echo $this->content;
+        $GLOBALS['SOBE'] = $this;
+        $this->init();
+
+        // Checking for first level external objects
+        $this->checkExtObj();
+
+        // Checking second level external objects
+        $this->checkSubExtObj();
+        $this->main();
+
+        $this->moduleTemplate->setContent($this->content);
+
+        $response->getBody()->write($this->moduleTemplate->renderContent());
+        return $response;
     }
 
     /*
@@ -143,13 +177,7 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
         if (!is_array($GLOBALS['BE_USER']->user)) {
             return false;
         }
-        if ($GLOBALS['BE_USER']->user['admin']) {
-            return true;
-        }
-        if ($GLOBALS['BE_USER']->user['tx_mydashboard_selfadmin']) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /**
@@ -168,10 +196,6 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
                 break;
 
             case 'refresh_config':
-                if (!$this->currentUserHaveConfigAccess()) {
-                    $this->content = 'No Access!';
-                    return false;
-                }
                 parse_str($_REQUEST['value'], $output);
                 if ($this->mgm->setWidgetConf($_REQUEST['key'], $output)) {
                     $this->mgm->safeUserConf($user);
@@ -181,19 +205,11 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
                 break;
 
             case 'config':
-                if (!$this->currentUserHaveConfigAccess()) {
-                    $this->content = 'No Access!';
-                    return false;
-                }
                 $widget = $this->mgm->getWidget($_REQUEST['key']);
                 $this->content = $widget->getConfig();
                 break;
 
             case 'delete':
-                if (!$this->currentUserHaveConfigAccess()) {
-                    $this->content = 'No Access!';
-                    return false;
-                }
                 if ($this->mgm->removeWidget($_REQUEST['key'])) {
                     $this->mgm->safeUserConf($user);
                 }
@@ -242,11 +258,9 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
                 }
 
                 $widget_c = '<div class="widget" id="widget_' . $widgetKey . '"><h2 onmouseover="showOptions(\'widget_' . $widgetKey . '\')" onmouseout="hideOptions(\'widget_' . $widgetKey . '\');"><span class="icon">' . $this->mgm->renderIcon($widget) . '</span><span class="text">' . $widget->getTitle() . '</span>';
-                if ($this->currentUserHaveConfigAccess()) {
-                    $widget_c .= '<a href="#" class="delete" id="widget_' . $widgetKey . '_delete" style="display: none" onclick="deleteWidget(\'' . $widgetKey . '\')">Delete</a>';
-                    if ($widget->isConfig()) {
-                        $widget_c .= '<a href="#" class="config" id="widget_' . $widgetKey . '_config" style="display: none" onclick="configWidget(\'' . $widgetKey . '\')">Config</a>';
-                    }
+                $widget_c .= '<a href="#" class="delete" id="widget_' . $widgetKey . '_delete" style="display: none" onclick="deleteWidget(\'' . $widgetKey . '\')">Delete</a>';
+                if ($widget->isConfig()) {
+                    $widget_c .= '<a href="#" class="config" id="widget_' . $widgetKey . '_config" style="display: none" onclick="configWidget(\'' . $widgetKey . '\')">Config</a>';
                 }
                 $widget_c .= '<a href="#" class="refresh" id="widget_' . $widgetKey . '_refresh" style="display: none" onclick="refreshWidget(\'' . $widgetKey . '\')">Refresh</a>';
 
@@ -302,16 +316,6 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
      */
     public function renderContent()
     {
-
-//		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('mydashboard').'class.tx_mydashboard_completeDoc.php');
-
-        // The different Content Types order by size
-//		$this->contentSize = array(
-//			'mediumDoc',
-//			'bigDoc',
-//			'tx_mydashboard_completeDoc',
-//		);
-
         $user = $GLOBALS['BE_USER']->user['uid'];
         $this->mgm->loadUserConf($user);
 //		$config = $this->mgm->getUserConf('config');
@@ -355,7 +359,7 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
         $headerSection = 'Hallo <strong>';
         $headerSection .= (trim($GLOBALS['BE_USER']->user['realName']))?htmlspecialchars($GLOBALS['BE_USER']->user['realName']):'<i>No User Name</i>';
         $headerSection .= ' (' . $GLOBALS['BE_USER']->user['username'] . ')</strong> - <i>' . date('F j, Y, g:i a', time()) . '</i>';
-        $menu = ($this->currentUserHaveConfigAccess())?\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->id, 'SET[function]', $this->MOD_SETTINGS['function'], $this->MOD_MENU['function'], 'index.php'):'';
+        $menu = \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->id, 'SET[function]', $this->MOD_SETTINGS['function'], $this->MOD_MENU['function'], 'index.php');
 
         $moduleContent = $this->moduleContent();
 
@@ -501,9 +505,3 @@ class tx_mydashboard_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
         return $content;
     }
 }
-
-// Get the Page
-$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\tx_mydashboard_module1::class);
-$SOBE->init();
-$SOBE->main();
-$SOBE->printContent();

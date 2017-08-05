@@ -4,5 +4,17 @@ if (!defined('TYPO3_MODE')) {
 }
 
 if (TYPO3_MODE == 'BE') {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('user', 'txmydashboardM1', '', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'mod1/');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule(
+        'user',
+        'txmydashboardM1',
+        '',
+        '',
+        [
+            'routeTarget' => \PHORAX\Mydashboard\Controller\MydashboardController::class . '::mainAction',
+            'access' => 'user,group',
+            'name' => 'user_txmydashboardM1',
+            'icon' => 'EXT:mydashboard/Resources/Public/Icons/moduleicon.gif',
+            'labels' => 'LLL:EXT:mydashboard/Resources/Private/Language/locallang_mod.xml'
+        ]
+    );
 }
