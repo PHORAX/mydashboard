@@ -63,7 +63,11 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
 
     public function __construct()
     {
-        $GLOBALS['LANG']->includeLLFile('EXT:mydashboard/mod1/locallang.xml');
+        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $this->moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
+        $this->MCONF = [
+            'name' => $this->moduleName,
+        ];
     }
 
     /*
@@ -88,8 +92,8 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
     {
         $this->MOD_MENU = [
             'function' => [
-                '1' => $GLOBALS['LANG']->getLL('title'),
-                '2' => $GLOBALS['LANG']->getLL('config')
+                '1' => $this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'),
+                '2' => $this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:config')
             ]
         ];
         parent::menuConfig();
@@ -364,9 +368,9 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
         $moduleContent = $this->moduleContent();
 
         $GLOBALS['LANG']->charSet = 'utf-8';
-        $this->content.=$this->doc->startPage($GLOBALS['LANG']->getLL('title'));
-        $this->content.=$this->doc->header($GLOBALS['LANG']->getLL('title'));
-        $this->content.=$this->doc->spacer(5);
+        $this->content.=$this->doc->startPage($this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'));
+        $this->content.=$this->doc->startPage($this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'));
+        $this->content.=$this->doc->header($this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'));
         $this->content.=$this->doc->section('', $this->doc->funcMenu($headerSection, $menu));
         $this->content.=$this->doc->divider(5);
 
@@ -375,10 +379,9 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
 
         // ShortCut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
-            $this->content.=$this->doc->spacer(20) . $this->doc->section('', $this->doc->makeShortcutIcon('id', implode(',', array_keys($this->MOD_MENU)), $this->MCONF['name']));
+            $this->content .= $this->doc->section('', $this->doc->makeShortcutIcon('id', implode(',', array_keys($this->MOD_MENU)), $this->MCONF['name']));
         }
 
-        $this->content.=$this->doc->spacer(10);
         $this->content.=$this->doc->endPage();
     }
 
@@ -459,7 +462,7 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
             $content .= '<span class="notice">Notice:</span> The Dashboard is not the startpage (current user)! Click <a style="text-decoration: underline;" href="' . $href . '">here</a> to set the Dashboard as startpage.<hr />';
         }
 
-        $content .= '<h1>' . $GLOBALS['LANG']->getLL('config') . '</h1>';
+        $content .= '<h1>' . $this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:config') . '</h1>';
 
         $href = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M'), []);
         $content .= '
