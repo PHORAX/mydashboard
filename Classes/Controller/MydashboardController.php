@@ -27,8 +27,6 @@ namespace PHORAX\Mydashboard\Controller;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-#$GLOBALS['BE_USER']->modAccess($MCONF, 1);
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -38,7 +36,6 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Fluid\ViewHelpers\Be\InfoboxViewHelper;
-
 
 /**
  * Module 'Dashboard' for the 'mydashboard' extension.
@@ -78,15 +75,13 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
     public function init()
     {
         parent::init();
-        // header("Content-Type: text/html; charset=utf-8");
-
         $this->mgm = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\tx_mydashboard_widgetmgm::class);
     }
 
     /*
      * Adds items to the ->MOD_MENU array. Used for the function menu selector.
      *
-     * @return	void
+     * @return void
      */
     public function menuConfig()
     {
@@ -103,26 +98,15 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
      * Main function of the module. Write the content to $this->content
      * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
      *
+     * @return string
      */
     public function main()
     {
-
-        //global $GLOBALS['BE_USER'];
-        //
-        //// Access check!
-        //$this->id = 1;
-        //$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
-        //$access = is_array($this->pageinfo) ? 1 : 0;
-        //
-        //if (($this->id && $access) || $GLOBALS['BE_USER']->user['admin'])	{
-            if (isset($_REQUEST['ajax'])) {
-                $this->renderAJAX();
-            } else {
-                $this->renderContent();
-            }
-        //} else {
-        //	$this->content .= 'No Access to this Module';
-        //} # if
+        if (isset($_REQUEST['ajax'])) {
+            $this->renderAJAX();
+        } else {
+            $this->renderContent();
+        }
     }
 
     /**
@@ -131,6 +115,7 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
      *
      * @param ServerRequestInterface $request the current request
      * @param ResponseInterface $response
+     *
      * @return ResponseInterface the response with the content
      */
     public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
@@ -154,7 +139,7 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
     /*
      * Generates the module content
      *
-     * @return	void
+     * @return void
      */
     public function moduleContent()
     {
@@ -322,11 +307,8 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
     {
         $user = $GLOBALS['BE_USER']->user['uid'];
         $this->mgm->loadUserConf($user);
-//		$config = $this->mgm->getUserConf('config');
 
         // ############# Set the right Content type here
-
-//		$this->currentContentSize = (isset($config['layout']) && in_array($config['layout'], $this->contentSize))?$config['layout']:$this->contentSize[1];
 
         $this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Template\DocumentTemplate::class);
         $this->doc->backPath = $GLOBALS['BACK_PATH'];
@@ -338,8 +320,6 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
 
         // required for the widgets
 
-//		$this->doc->loadJavascriptLib('contrib/prototype/prototype.js');
-//		$this->doc->getPageRenderer()->loadScriptaculous('effects,dragdrop');
         $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
         $pageRenderer->loadJquery();
         $this->doc->loadJavascriptLib(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('mydashboard') . 'mod1/functions.js');
@@ -367,7 +347,6 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
 
         $moduleContent = $this->moduleContent();
 
-        $GLOBALS['LANG']->charSet = 'utf-8';
         $this->content.=$this->doc->startPage($this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'));
         $this->content.=$this->doc->startPage($this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'));
         $this->content.=$this->doc->header($this->getLanguageService()->sL('LLL:EXT:mydashboard/Resources/Private/Language/locallang.xml:title'));
@@ -405,7 +384,6 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
      */
     public function showConfig()
     {
-
         // Init Config Page & load the User data
         $user = $GLOBALS['BE_USER']->user['uid'];
         $this->mgm->loadUserConf($user);
@@ -492,6 +470,7 @@ class MydashboardController extends \TYPO3\CMS\Backend\Module\BaseScriptClass
         $content .= '<h3>Add Widgets (always to the left row)</h3>';
         $widgets = $this->mgm->getAllWidgets();
         $content .= '<table>';
+
         /**
          * @var string $key
          * @var \tx_mydashboard_template $widget

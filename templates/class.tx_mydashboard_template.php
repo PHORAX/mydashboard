@@ -42,6 +42,7 @@ class tx_mydashboard_template
     {
         $this->setDefaultConfig($config);
     }
+
     public function createNewRecord($table, $pageID)
     {
         return false;
