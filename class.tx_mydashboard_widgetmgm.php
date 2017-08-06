@@ -67,7 +67,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Load a Widget with the given WidgetKey
      *
-     * @parm String $key Widget key
+     * @param String $key Widget key
      * @return Object The Widget
      */
     public function loadWidget($key)
@@ -115,7 +115,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Get a widget with the user configuration
      *
-     * @parm String $dashboardKey The Dashboard Key
+     * @param String $dashboardKey The Dashboard Key
      * @return Object/Boolean The Widget
      */
     public function getWidget($dashboardKey)
@@ -144,7 +144,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Helper function to Render a Widget Icon
      *
-     * @parm Object Widget Object
+     * @param Object Widget Object
      * @return String The HTML for the WIdget Icon
      */
     public function renderIcon(&$widget)
@@ -155,7 +155,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Return the User data
      *
-     * @parm String $field The Fielname (Optional)
+     * @param String $field The Fielname (Optional)
      * @return Array/String the Data
      */
     public function getUserData($field = false)
@@ -169,8 +169,8 @@ class tx_mydashboard_widgetmgm
     /*
      * Set the widget configuration
      *
-     * @parm String $dashKey The Dashboard Widget Key
-     * @parm Array the configuration
+     * @param String $dashKey The Dashboard Widget Key
+     * @param Array the configuration
      * @return boolean (Write the User conf only on true)
      */
     public function setWidgetConf($dashKey, $conf)
@@ -201,7 +201,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Return the User Conf
      *
-     * @parm String $field The Fielname (Optional)
+     * @param String $field The Fielname (Optional)
      */
     public function getUserConf($field = false)
     {
@@ -214,8 +214,8 @@ class tx_mydashboard_widgetmgm
     /*
      * Set the User Conf
      *
-     * @parm String $field The Fielname
-     * @parm String $value The Value
+     * @param String $field The Fielname
+     * @param String $value The Value
      */
     public function setUserConf($field, $value)
     {
@@ -229,7 +229,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Set the new Order of the Dashboard Widgets
      *
-     * @parm array $order The multi Array with the new Order
+     * @param array $order The multi Array with the new Order
      */
     public function setNewOrder($order)
     {
@@ -246,8 +246,8 @@ class tx_mydashboard_widgetmgm
     /*
      * Add a new Widget to the Dashboard
      *
-     * @parm string $key The Widget Key
-     * @parm int $pos The position in the dashboard
+     * @param string $key The Widget Key
+     * @param int $pos The position in the dashboard
      */
     public function addWidget($key, $pos = 0)
     {
@@ -268,7 +268,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Remove the Widget with the $dashboardKey from the Dashboard
      *
-     * @parm string $dashboardKey The DashboardKey
+     * @param string $dashboardKey The DashboardKey
      */
     public function removeWidget($dashboardKey)
     {
@@ -302,7 +302,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Safe the Widget configuration in the user record
      *
-     * @parm int $userID The ID of the user Record
+     * @param int $userID The ID of the user Record
      */
     public function safeUserConf($userID = false)
     {
@@ -318,7 +318,7 @@ class tx_mydashboard_widgetmgm
     /*
      * Load the Widget conf from the user
      *
-     * @parm int $userID The User ID of the User
+     * @param int $userID The User ID of the User
      */
     public function loadUserConf($userID)
     {

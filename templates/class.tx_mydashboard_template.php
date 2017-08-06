@@ -59,7 +59,7 @@ class tx_mydashboard_template
     /*
      * Register a JS File to the system
      *
-     * @parm String $relFileName The Script File Name
+     * @param String $relFileName The Script File Name
      */
     public function registerJSFile($relFileName)
     {
@@ -94,7 +94,7 @@ class tx_mydashboard_template
     /*
      * Set the Dashboard Key (is used by the Widget Mgm Class)
      *
-     * @parm String $key The Dashboard Key
+     * @param String $key The Dashboard Key
      */
     public function setDashboardKey($key)
     {
@@ -114,7 +114,7 @@ class tx_mydashboard_template
     /*
      * Set the Widget Key (is used by the Widget Mgm Class)
      *
-     * @parm String $key The Widget Key
+     * @param String $key The Widget Key
      */
     public function setWidgetKey($key)
     {
@@ -134,7 +134,7 @@ class tx_mydashboard_template
     /*
      * Add a Language File to the Label parsing
      *
-     * @parm String $file A valid Filename
+     * @param String $file A valid Filename
      * @return boolean (always true)
      */
     public function addLanguageFile($file)
@@ -147,7 +147,7 @@ class tx_mydashboard_template
     /*
      * Get a Label bei the given key in the defined language
      *
-     * @parm String $key the Label Key
+     * @param String $key the Label Key
      * Lreturn String The Label
      */
     public function getInternalLabel($key)
@@ -217,7 +217,7 @@ class tx_mydashboard_template
     /*
      * Set the User defined configuration vars
      *
-     * @parm Array $conf The configs
+     * @param Array $conf The configs
      */
     public function setConfigVars($conf)
     {
@@ -227,7 +227,7 @@ class tx_mydashboard_template
     /*
      * Set the default configuration
      *
-     * @parm Array $config The default configuration
+     * @param Array $config The default configuration
      */
     public function setDefaultConfig($config)
     {
@@ -247,7 +247,7 @@ class tx_mydashboard_template
     /*
      * Get the Value of the Config Var
      *
-     * @parm String $name The name of the config var
+     * @param String $name The name of the config var
      * @return String The value
      */
     public function getConfigVar($name)
@@ -271,10 +271,10 @@ class tx_mydashboard_template
     /*
      * Show a List of Database Records
      *
-     * @parm String $headline The Headline of the list
-     * @parm Array $rows The Datarecords from e.g. a Database
-     * @parm String $title One or more titles Comma separated
-     * @parm Array $options Same Options for more functions
+     * @param String $headline The Headline of the list
+     * @param Array $rows The Datarecords from e.g. a Database
+     * @param String $title One or more titles Comma separated
+     * @param Array $options Same Options for more functions
      */
     public function showDatabaseListByArray($headline, $rows, $title, $options = [])
     {
@@ -311,7 +311,7 @@ class tx_mydashboard_template
     /*
      * Create the "New Inline Records Icon"
      *
-     * @parm Array $data An Option Array
+     * @param Array $data An Option Array
      * @return String The Content
      */
     private function createNewInlineRecord($data)
@@ -328,10 +328,10 @@ class tx_mydashboard_template
     /*
      * Show a List of Database Records
      *
-     * @parm String $headline The Headline of the list
-     * @parm Resource $res The SQL Resource
-     * @parm String $title One or more titles Comma separated
-     * @parm Array $options Same Options for more functions
+     * @param String $headline The Headline of the list
+     * @param Resource $res The SQL Resource
+     * @param String $title One or more titles Comma separated
+     * @param Array $options Same Options for more functions
      */
     public function showDatabaseList($headline, $res, $title, $options = [])
     {
@@ -347,8 +347,8 @@ class tx_mydashboard_template
     /*
      * Render a field in the Output of the default list function
      *
-     * @parm String $name the field name
-     * @parm String $value the field content
+     * @param String $name the field name
+     * @param String $value the field content
      * @return String the manipulation of the string
      */
     private function renderField($name, $value)
@@ -368,7 +368,7 @@ class tx_mydashboard_template
      * Use this function for different views
      * example in the userstats Widget
      *
-     * @parm Array $items The Items of the Menü
+     * @param Array $items The Items of the Menü
      * @return String the renderd menu
      */
     public function buildSelectMenu($items)
@@ -394,7 +394,7 @@ class tx_mydashboard_template
     /*
      * Set the title of the Widget
      *
-     * @parm String $title Widget title
+     * @param String $title Widget title
      */
     public function setTitle($title)
     {
@@ -404,7 +404,7 @@ class tx_mydashboard_template
     /*
      * Set the Icon of the Widget e.g. $this->setIcon(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('tt_news').'/ext_icon.gif');
      *
-     * @parm String $iconPath the relative Path to the IconFile
+     * @param String $iconPath the relative Path to the IconFile
      */
     public function setIcon($iconPath)
     {
