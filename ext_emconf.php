@@ -6,15 +6,11 @@ $EM_CONF[$_EXTKEY] = [
     'category' => 'module',
     'version' => '',
     'state' => 'stable',
-    'uploadfolder' => false,
-    'createDirs' => '',
-    'clearcacheonload' => false,
     'author' => 'Tim Lochmueller',
     'author_email' => 'webmaster@fruit-lab.de',
-    'author_company' => '',
     'constraints' => [
         'depends' => [
-            'typo3' => '7.6.0-8.7.99'
+            'typo3' => '9.5.0-9.5.99'
         ]
     ]
 ];
